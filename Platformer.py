@@ -225,7 +225,7 @@ while True: # game loop
                 score += 1
 
                 if random.randint(0, 5) == 0:
-                    meats.append([-3, e.entity(arrow.loc[0], arrow.loc[1], 16, 16, 'meat'), 0])
+                    meats.append([-2, e.entity(arrow.loc[0], arrow.loc[1], 16, 16, 'meat'), 0])
         
         
                 
@@ -375,10 +375,11 @@ while True: # game loop
                 # if event.key == K_a:
                 #     is_shooting_bullet = True
                 #     bullet_objects.append(e.bullet([player.x + 10, player.y + 12], player.flip))
-                if event.key == K_s:
+                if event.key == K_s and arrow_cnt:
                     is_shooting_arrow = True
                     arrow_shoot_sound.play()
                     arrow_objects.append(e.arrow([player.x + 6, player.y + 12], player.flip))
+                    arrow_cnt -= 1
                     
             if game_over == True:
                 
@@ -410,8 +411,14 @@ while True: # game loop
     pygame.draw.rect(display, GREEN, (10, 10, current_health, 5))
 
     score_board = game_font.render('score : ' + str(score), True, (255, 255, 255))
+    #arrow_board = game_font.render('arrow : ' + str(arrow_cnt), True, (255, 255, 255))
     
-    screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0,0))
+    screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 10))
     screen.blit(score_board, (10, 50))
+    #screen.blit(arrow_board, (10, 90))
+
+    for i in range(1, arrow_cnt+1):
+        screen.blit(arrow_cnt_img, (10*i, 90))
+
     
     pygame.display.update()

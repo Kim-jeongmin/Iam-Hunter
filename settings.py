@@ -15,6 +15,8 @@ max_health = 200
 hit_cooldown = 0
 arrow_offence_power = 50
 
+arrow_cnt = 10
+
 true_scroll = [0,0]
 
 CHUNK_SIZE = 24
@@ -33,6 +35,7 @@ tree_img = pygame.image.load('data/images/tree.png')
 stone_img = pygame.image.load('data/images/stone.png')
 cloud_img = pygame.image.load('data/images/cloud.png')
 arrow_img = pygame.image.load('data/images/arrow.png')
+arrow_cnt_img = pygame.image.load('data/images/arrow_count.png')
 
 plant_img.set_colorkey((255,255,255))
 spike_img.set_colorkey((0,0,0))
