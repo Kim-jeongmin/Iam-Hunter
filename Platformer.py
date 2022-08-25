@@ -81,7 +81,7 @@ pygame.mixer.music.play(-1)
 
 player = e.entity(100,0,10,26,'player')
 
-# background_objects = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,100,400]],[0.5,[300,80,120,400]]]
+
 
 
 
@@ -100,7 +100,20 @@ mm.show_start_screen()
 
 while True: # game loop
     clock.tick(60)
-    display.fill((146,244,255)) # clear screen by filling it with blue
+    if game_time <= 1200 : 
+        display.fill((146,244,255)) # clear screen by filling it with blue
+        is_night = False
+    elif 1200 < game_time <= 1300: display.fill((243,138,110)) 
+    elif 1300 < game_time <= 1400: display.fill((201,109,127))
+    elif 1400 < game_time <= 1500: display.fill((125,94,128))
+    elif 1500 < game_time <= 1600: display.fill((87,68,111))
+    else: 
+        display.fill((19,26,98))
+        is_night = True
+    
+
+    game_time += 1
+    game_time %= 3000
     
     if grass_sound_timer > 0:
         grass_sound_timer -= 1
@@ -111,16 +124,8 @@ while True: # game loop
     scroll[0] = int(scroll[0])
     scroll[1] = int(scroll[1])
 
-    #pygame.draw.rect(display,(7,80,75),pygame.Rect(0,120,300,80))
 
-    """
-    for background_object in background_objects:
-        obj_rect = pygame.Rect(background_object[1][0]-scroll[0]*background_object[0],background_object[1][1]-scroll[1]*background_object[0],background_object[1][2],background_object[1][3])
-        if background_object[0] == 0.5:
-            pygame.draw.rect(display,(20,170,150),obj_rect)
-        else:
-            pygame.draw.rect(display,(25,76,73),obj_rect)
-    """
+
 
     tile_rects = []
     for y in range(3):
@@ -418,7 +423,7 @@ while True: # game loop
     #screen.blit(arrow_board, (10, 90))
 
     for i in range(1, arrow_cnt+1):
-        screen.blit(arrow_cnt_img, (10*i, 90))
+        screen.blit(arrow_cnt_img, (20*i, 90))
 
     
     pygame.display.update()

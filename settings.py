@@ -14,6 +14,7 @@ current_health  = 200
 max_health = 200
 hit_cooldown = 0
 arrow_offence_power = 50
+is_night = False
 
 arrow_cnt = 10
 
@@ -61,6 +62,6 @@ meats = []
 
 
 
-
+game_time = 0
 
 grass_sound_timer = 0
