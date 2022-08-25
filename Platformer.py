@@ -2,6 +2,7 @@ from dis import dis
 import pygame, sys, os, random, noise
 import data.engine as e
 import main_menu as mm
+from settings import *
 clock = pygame.time.Clock()
 
 from pygame.locals import *
@@ -17,27 +18,9 @@ screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # initiate the window
 
 display = pygame.Surface((600,400)) # used as the surface for rendering, which is scaled
 
-moving_right = False
-moving_left = False
-is_shooting_bullet = False
-is_shooting_arrow = False
-is_hitted = False
-vertical_momentum = 0
-air_timer = 0
-game_over = False
-game_over_timer = 0
-score = 0
-current_health  = 200
-max_health = 200
-hit_cooldown = 0
-arrow_offence_power = 50
 
-true_scroll = [0,0]
 
-CHUNK_SIZE = 24
 
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
         
 
 def generate_chunk(x,y):
@@ -61,6 +44,11 @@ def generate_chunk(x,y):
                 if num == 2:
                     tile_type = 5
             
+            # elif target_y == height - 3:
+
+            #     if random.randint(0, 10) == 0:
+            #         tile_type = 1
+
             elif height - 12 < target_y < height - 8:
                 if random.randint(1,50) == 1:
                     tile_type = 6
@@ -73,40 +61,9 @@ def generate_chunk(x,y):
 
 
 e.load_animations('data/images/entities/')
-grass_img = pygame.image.load('data/images/grass.png').convert()
-dirt_img = pygame.image.load('data/images/dirt.png').convert()
-plant_img = pygame.image.load('data/images/plant.png').convert()
-spike_img = pygame.image.load('data/images/spike.png').convert()
-jump_pole_img = pygame.image.load('data/images/jump_pole.png').convert()
-bullet_img = pygame.image.load('data/images/bullet.png').convert()
-game_over_img = pygame.image.load('data/images/game_over.png')
-tree_img = pygame.image.load('data/images/tree.png')
-stone_img = pygame.image.load('data/images/stone.png')
-cloud_img = pygame.image.load('data/images/cloud.png')
-arrow_img = pygame.image.load('data/images/arrow.png')
 
 
-plant_img.set_colorkey((255,255,255))
-spike_img.set_colorkey((0,0,0))
-jump_pole_img.set_colorkey((0,0,0))
 
-game_map = {}
-
-tile_index = {
-              1:grass_img,
-              2:dirt_img,
-              3:plant_img,
-              4:tree_img,
-              5:stone_img,
-              6:cloud_img
-              }
-
-spike_objects = []
-jump_pole_objects = []
-bullet_objects = []
-arrow_objects= []
-enemies = []
-meats = []
 
 
 arrow_shoot_sound = pygame.mixer.Sound('data/audio/arrow.wav')
@@ -121,7 +78,6 @@ grass_sounds[1].set_volume(0.2)
 pygame.mixer.music.load('data/audio/music.wav')
 pygame.mixer.music.play(-1)
 
-grass_sound_timer = 0
 
 player = e.entity(100,0,10,26,'player')
 
@@ -136,8 +92,8 @@ player = e.entity(100,0,10,26,'player')
 #    jump_pole_objects.append(e.jump_pole((random.randint(0, 600)-300, 90)))
 
 for i in range(3):
-    enemies.append([0, e.entity(random.randint(player.x - 450, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
-    enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 450), random.randint(-100, -50) , 10, 20, 'monkey'), 100])
+    enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
+    enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50) , 15, 20, 'monkey'), 100])
     
 
 mm.show_start_screen()
@@ -215,8 +171,8 @@ while True: # game loop
 
     if not enemies:
         for i in range(3):
-            enemies.append([0, e.entity(random.randint(player.x - 450, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
-            enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 450), random.randint(-100, -50), 10, 20, 'monkey'), 100])
+            enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
+            enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50), 15, 20, 'monkey'), 100])
 
 
     for enemy in enemies:
@@ -241,7 +197,9 @@ while True: # game loop
             enemy[0] = -4
 
 
-        
+        if enemy[1].action == 'die':
+            if collision_types['bottom']:
+                enemies.remove(enemy)
         
         if enemy[1].action == 'idle':
 
@@ -267,11 +225,9 @@ while True: # game loop
                 score += 1
 
                 if random.randint(0, 5) == 0:
-                    meats.append([0, e.entity(arrow.loc[0], arrow.loc[1], 16, 16, 'meat'), 0])
+                    meats.append([-3, e.entity(arrow.loc[0], arrow.loc[1], 16, 16, 'meat'), 0])
         
-        if enemy[1].action == 'die':
-            if collision_types['bottom']:
-                enemies.remove(enemy)
+        
                 
 
         
@@ -438,8 +394,8 @@ while True: # game loop
                     meats.clear()
 
                     for i in range(3):
-                        enemies.append([0, e.entity(random.randint(player.x - 450, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
-                        enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 450), random.randint(-100, -50), 10, 20, 'monkey'), 100])
+                        enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
+                        enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50), 15, 20, 'monkey'), 100])
 
         if event.type == KEYUP:
             if event.key == K_RIGHT:
