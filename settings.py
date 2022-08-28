@@ -35,7 +35,6 @@ game_over_img = pygame.image.load('data/images/game_over.png')
 tree_img = pygame.image.load('data/images/tree.png')
 stone_img = pygame.image.load('data/images/stone.png')
 cloud_img = pygame.image.load('data/images/cloud.png')
-arrow_img = pygame.image.load('data/images/arrow.png')
 arrow_cnt_img = pygame.image.load('data/images/arrow_count.png')
 
 plant_img.set_colorkey((255,255,255))

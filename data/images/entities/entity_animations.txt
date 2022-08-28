@@ -4,7 +4,7 @@ player/shoot/ 7;7;7
 player/arrow/ 3;3;3;3;3  
 player/die/ 7;7;7;7 
 player/hit/ 20  
-player/club/ 5;5;5;5;5    
+player/club/ 3;3;3;3;3    
 bunny/idle/ 20;20 loop   
 bunny/die/ 7;7;7   
 bunny/rage/ 20;20 loop   
@@ -12,3 +12,4 @@ meat/idle/ 1 loop
 monkey/idle/ 7;7 loop  
 monkey/die/ 7;7;7;7  
 monkey/rage/ 7;7 loop   
+arrow/idle/ 1 

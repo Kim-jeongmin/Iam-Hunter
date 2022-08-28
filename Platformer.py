@@ -92,7 +92,7 @@ player = e.entity(100,0,10,26,'player')
 #for i in range(5):
 #    jump_pole_objects.append(e.jump_pole((random.randint(0, 600)-300, 90)))
 
-for i in range(3):
+for i in range(10):
     enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
     enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50) , 15, 20, 'monkey'), 100])
     
@@ -117,8 +117,6 @@ while True: # game loop
     elif 1400 < game_time <= 1500: display.fill((125,94,128))
     elif 1500 < game_time <= 1600: display.fill((87,68,111))
     else: 
-        
-        
         display.fill((19,26,98))
         is_night = True
     
@@ -239,14 +237,14 @@ while True: # game loop
                 hit_cooldown = 30
 
             for arrow in arrow_objects:
-                if enemy[1].obj.rect.colliderect(arrow.get_rect()):
+                if enemy[1].obj.rect.colliderect(arrow[1].obj.rect):
 
                     arrow_objects.remove(arrow)
                     enemy[2] -= arrow_offence_power
                     
-                    if arrow.flip == True: 
+                    if arrow[0] == True: 
                         enemy[1].x -= 2
-                    elif arrow.flip == False:
+                    elif arrow[0] == False:
                         enemy[1].x += 2
 
             if enemy[2] == 0:
@@ -256,7 +254,7 @@ while True: # game loop
                 score += 1
 
                 if random.randint(0, 5) == 0:
-                    meats.append([-2, e.entity(arrow.loc[0], arrow.loc[1], 16, 16, 'meat'), 0])
+                    meats.append([-2, e.entity(enemy[1].x, enemy[1].y, 16, 16, 'meat'), 0])
         
         
                 
@@ -292,13 +290,27 @@ while True: # game loop
 
 
     for arrow in arrow_objects:
+        
+        
+        
+            
+        arrow_movement = [0, 0]    
+            
+        if arrow[0] == False:
+            arrow[1].set_flip(False)
+            arrow_movement[0] += 3
+        if arrow[0] == True:
+            arrow[1].set_flip(True)
+            arrow_movement[0] -= 3
+       
+        collision_types = arrow[1].move(arrow_movement, tile_rects)
+        
+        # if collision_types == 'right' and 'left':
+        #     arrow[1].set_action('abandoned')
 
-        if arrow.flip == True:
-            arrow.render(display, scroll, e.flip(arrow_img))
-            arrow.loc[0] -= 3
-        if arrow.flip == False:
-            arrow.render(display, scroll, arrow_img)
-            arrow.loc[0] += 3
+        arrow[1].change_frame(1)
+        arrow[1].display(display, scroll)
+            
             
             
     
@@ -360,8 +372,11 @@ while True: # game loop
                 player.set_action('run')
         if is_wielding_club:
             player.set_action('club')
+            
             if player.animation_frame >= len(e.animation_higher_database['player']['club'][0]) - 1:
                 is_wielding_club = False
+                
+                
         
         elif is_shooting_arrow:
             player.set_action('arrow')
@@ -410,7 +425,7 @@ while True: # game loop
                 elif event.key == K_s and arrow_cnt:
                     is_shooting_arrow = True
                     arrow_shoot_sound.play()
-                    arrow_objects.append(e.arrow([player.x + 6, player.y + 12], player.flip))
+                    arrow_objects.append([player.flip , e.entity(player.x + 10, player.y + 12, 13, 1, 'arrow')])
                     arrow_cnt -= 1
                     
             if game_over == True:
