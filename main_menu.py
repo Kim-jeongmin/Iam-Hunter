@@ -1,5 +1,6 @@
 import pygame
 
+pygame.mixer.pre_init(44100, -16, 2, 512)
 clock = pygame.time.Clock()
 WINDOW_SIZE = (1200,800)
 screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # initiate the window
@@ -30,7 +31,7 @@ def show_start_screen():
     global frame_timer, title_idx
     waiting = True
     while waiting:
-        screen.fill((146,244,255))
+        screen.fill((0,0,0))
         clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
