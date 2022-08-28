@@ -38,7 +38,7 @@ def generate_chunk(x,y):
             elif target_y == height :
                 tile_type = 1 # grass
             elif target_y == height - 1:
-                num = random.randint(1,10)
+                num = random.randint(1,20)
                 if num == 1:
                     tile_type = 3 # plant
                 if num == 2:
@@ -52,9 +52,9 @@ def generate_chunk(x,y):
             elif height - 12 < target_y < height - 8:
                 if random.randint(1,50) == 1:
                     tile_type = 6
-            elif target_y == height - 4:
-                if random.randint(1,15) == 1:
-                    tile_type = 4
+            #elif target_y == height - 3:
+            #    if random.randint(1,15) == 1:
+            #        tile_type = 4
             if tile_type != 0:
                 chunk_data.append([[target_x,target_y],tile_type])
     return chunk_data
@@ -75,8 +75,9 @@ hit_sound.set_volume(0.2)
 grass_sounds[0].set_volume(0.2)
 grass_sounds[1].set_volume(0.2)
 
-pygame.mixer.music.load('data/audio/music.wav')
-pygame.mixer.music.play(-1)
+
+
+
 
 
 player = e.entity(100,0,10,26,'player')
@@ -98,16 +99,26 @@ for i in range(3):
 
 mm.show_start_screen()
 
+pygame.mixer.music.load('data/audio/noon.wav')
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.5)
+
+
 while True: # game loop
     clock.tick(60)
     if game_time <= 1200 : 
+        
         display.fill((146,244,255)) # clear screen by filling it with blue
         is_night = False
     elif 1200 < game_time <= 1300: display.fill((243,138,110)) 
-    elif 1300 < game_time <= 1400: display.fill((201,109,127))
+    elif 1300 < game_time <= 1400: 
+        display.fill((201,109,127))
+        # pygame.mixer.music.fadeout(2000)
     elif 1400 < game_time <= 1500: display.fill((125,94,128))
     elif 1500 < game_time <= 1600: display.fill((87,68,111))
     else: 
+        
+        
         display.fill((19,26,98))
         is_night = True
     
@@ -192,7 +203,18 @@ while True: # game loop
             if player.x < enemy[1].x - 5:
                 enemy_movement[0] = -1
                 enemy[1].set_flip(False)
+        if enemy[1].action == 'rage':
+            if player.x > enemy[1].x + 5:
+                enemy_movement[0] = 2
+                enemy[1].set_flip(True)
+            if player.x < enemy[1].x - 5:
+                enemy_movement[0] = -2
+                enemy[1].set_flip(False)
         
+        if is_night and enemy[1].action == 'idle':
+            enemy[1].set_action('rage')
+        if not is_night and enemy[1].action == 'rage':
+            enemy[1].set_action('idle')
 
         if enemy[1].y > 400: enemies.remove(enemy)
         collision_types = enemy[1].move(enemy_movement, tile_rects)
@@ -206,7 +228,7 @@ while True: # game loop
             if collision_types['bottom']:
                 enemies.remove(enemy)
         
-        if enemy[1].action == 'idle':
+        if enemy[1].action == 'idle' or enemy[1].action == 'rage':
 
             if player.obj.rect.colliderect(enemy[1].obj.rect) and hit_cooldown == 0:
                 if not game_over : hit_sound.play()
@@ -221,7 +243,11 @@ while True: # game loop
 
                     arrow_objects.remove(arrow)
                     enemy[2] -= arrow_offence_power
-
+                    
+                    if arrow.flip == True: 
+                        enemy[1].x -= 2
+                    elif arrow.flip == False:
+                        enemy[1].x += 2
 
             if enemy[2] == 0:
                 enemy[1].set_action('die')
@@ -323,7 +349,7 @@ while True: # game loop
     # 상태별 애니메이션
     if not game_over:
 
-        if is_shooting_bullet == False and is_shooting_arrow == False and is_hitted == False:
+        if is_wielding_club == False and is_shooting_arrow == False and is_hitted == False:
             if player_movement[0] == 0:
                 player.set_action('idle')
             if player_movement[0] > 0:
@@ -332,12 +358,12 @@ while True: # game loop
             if player_movement[0] < 0:
                 player.set_flip(True)
                 player.set_action('run')
-        if is_shooting_bullet:
-            player.set_action('shoot')
-            if player.animation_frame >= len(e.animation_higher_database['player']['shoot'][0]) - 1:
-                is_shooting_bullet = False
+        if is_wielding_club:
+            player.set_action('club')
+            if player.animation_frame >= len(e.animation_higher_database['player']['club'][0]) - 1:
+                is_wielding_club = False
         
-        if is_shooting_arrow:
+        elif is_shooting_arrow:
             player.set_action('arrow')
             if player.animation_frame >= len(e.animation_higher_database['player']['arrow'][0]) - 1:
                 is_shooting_arrow = False
@@ -353,7 +379,8 @@ while True: # game loop
         
         player.set_action('die')
 
-        
+
+        pygame.mixer.music.stop()
         if player.animation_frame >= len(e.animation_higher_database['player']['die'][0]) - 1:
             if game_over_timer == 10 : 
                 display.blit(game_over_img,(200,70))
@@ -367,8 +394,8 @@ while True: # game loop
             sys.exit()
         if event.type == KEYDOWN:
             if game_over == False:
-                if event.key == K_w:
-                    pygame.mixer.music.fadeout(1000)
+                # if event.key == K_w:
+                #     pygame.mixer.music.fadeout(1000)
                 if event.key == K_RIGHT:
                     moving_right = True
                 if event.key == K_LEFT:
@@ -377,10 +404,10 @@ while True: # game loop
                     if air_timer < 6:
                         jump_sound.play()
                         vertical_momentum = -5
-                # if event.key == K_a:
-                #     is_shooting_bullet = True
-                #     bullet_objects.append(e.bullet([player.x + 10, player.y + 12], player.flip))
-                if event.key == K_s and arrow_cnt:
+                if event.key == K_a:
+                    is_wielding_club = True
+                    #bullet_objects.append(e.bullet([player.x + 10, player.y + 12], player.flip))
+                elif event.key == K_s and arrow_cnt:
                     is_shooting_arrow = True
                     arrow_shoot_sound.play()
                     arrow_objects.append(e.arrow([player.x + 6, player.y + 12], player.flip))
@@ -398,7 +425,8 @@ while True: # game loop
                     enemies.clear()
                     arrow_objects.clear()
                     meats.clear()
-
+                    pygame.mixer.music.play()
+                    game_time = 0
                     for i in range(3):
                         enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
                         enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50), 15, 20, 'monkey'), 100])

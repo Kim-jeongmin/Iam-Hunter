@@ -1,11 +1,14 @@
 player/idle/ 7;7;40 loop
-player/run/ 7;7 loop
+player/run/ 7;7 loop 
 player/shoot/ 7;7;7  
 player/arrow/ 3;3;3;3;3  
 player/die/ 7;7;7;7 
-player/hit/ 20   
-bunny/idle/ 1 loop
+player/hit/ 20  
+player/club/ 5;5;5;5;5    
+bunny/idle/ 20;20 loop   
 bunny/die/ 7;7;7   
-meat/idle/ 1 loop 
-monkey/idle/ 7;7 loop
-monkey/die/ 7;7;7;7 
+bunny/rage/ 20;20 loop   
+meat/idle/ 1 loop   
+monkey/idle/ 7;7 loop  
+monkey/die/ 7;7;7;7  
+monkey/rage/ 7;7 loop   

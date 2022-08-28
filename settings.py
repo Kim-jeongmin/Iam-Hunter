@@ -2,7 +2,7 @@ import pygame
 
 moving_right = False
 moving_left = False
-is_shooting_bullet = False
+is_wielding_club = False
 is_shooting_arrow = False
 is_hitted = False
 vertical_momentum = 0
