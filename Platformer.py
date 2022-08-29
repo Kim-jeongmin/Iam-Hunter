@@ -44,10 +44,10 @@ def generate_chunk(x,y):
                 if num == 2:
                     tile_type = 5
             
-            # elif target_y == height - 3:
+            elif target_y == height - 3:
 
-            #     if random.randint(0, 10) == 0:
-            #         tile_type = 1
+                if random.randint(0, 10) == 0:
+                    tile_type = 4
 
             elif height - 12 < target_y < height - 8:
                 if random.randint(1,50) == 1:
