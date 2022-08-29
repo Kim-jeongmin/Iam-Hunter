@@ -92,7 +92,7 @@ player = e.entity(100,0,10,26,'player')
 #for i in range(5):
 #    jump_pole_objects.append(e.jump_pole((random.randint(0, 600)-300, 90)))
 
-for i in range(10):
+for i in range(2):
     enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
     enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50) , 15, 20, 'monkey'), 100])
     
@@ -229,9 +229,10 @@ while True: # game loop
         if enemy[1].action == 'idle' or enemy[1].action == 'rage':
 
             if player.obj.rect.colliderect(enemy[1].obj.rect) and hit_cooldown == 0:
-                if not game_over : hit_sound.play()
+                if not game_over : 
+                    hit_sound.play()
+                    vertical_momentum = -4
                 current_health -= 3
-                vertical_momentum = -4
                 player_movement[0] += 4
                 is_hitted = True
                 hit_cooldown = 30
@@ -376,12 +377,13 @@ while True: # game loop
                 player.set_action('run')
         if is_wielding_club:
             player.set_action('club')
-            
             if player.animation_frame >= len(e.animation_higher_database['player']['club'][0]) - 1:
                 is_wielding_club = False
                 
-                
-        
+                # if player.flip == True: 
+                #     player.set_action('idle')
+                #     player.obj.x += 16
+                #     player.obj.y += 9
         elif is_shooting_arrow:
             player.set_action('arrow')
             if player.animation_frame >= len(e.animation_higher_database['player']['arrow'][0]) - 1:
@@ -391,6 +393,7 @@ while True: # game loop
             player.set_action('hit')
             if player.animation_frame >= len(e.animation_higher_database['player']['hit'][0]) - 1:
                 is_hitted = False
+            
 
     if game_over:
         moving_right = False
@@ -425,10 +428,14 @@ while True: # game loop
                         vertical_momentum = -5
                 if event.key == K_a:
                     is_wielding_club = True
-                    #bullet_objects.append(e.bullet([player.x + 10, player.y + 12], player.flip))
+                    # if player.flip == True: 
+                    #     player.obj.x -= 16
+                    #     player.obj.y -= 9
+                    
                 elif event.key == K_s and arrow_cnt:
                     is_shooting_arrow = True
                     arrow_shoot_sound.play()
+
                     if player.flip == False: arrow_objects.append([player.flip , e.entity(player.x + 13, player.y + 12, 13, 1, 'arrow')])
                     else: arrow_objects.append([player.flip , e.entity(player.x - 13, player.y + 12, 13, 1, 'arrow')])
                     arrow_cnt -= 1
