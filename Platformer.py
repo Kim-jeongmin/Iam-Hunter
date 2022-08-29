@@ -237,7 +237,7 @@ while True: # game loop
                 hit_cooldown = 30
 
             for arrow in arrow_objects:
-                if enemy[1].obj.rect.colliderect(arrow[1].obj.rect):
+                if enemy[1].obj.rect.colliderect(arrow[1].obj.rect) and arrow[1].action == 'idle':
 
                     arrow_objects.remove(arrow)
                     enemy[2] -= arrow_offence_power
@@ -305,8 +305,12 @@ while True: # game loop
        
         collision_types = arrow[1].move(arrow_movement, tile_rects)
         
-        # if collision_types == 'right' and 'left':
-        #     arrow[1].set_action('abandoned')
+        if collision_types['right'] or collision_types['left']:
+            arrow[1].set_action('die')
+
+        if player.obj.rect.colliderect(arrow[1].obj.rect) : 
+            arrow_objects.remove(arrow)
+            arrow_cnt += 1
 
         arrow[1].change_frame(1)
         arrow[1].display(display, scroll)
@@ -425,7 +429,8 @@ while True: # game loop
                 elif event.key == K_s and arrow_cnt:
                     is_shooting_arrow = True
                     arrow_shoot_sound.play()
-                    arrow_objects.append([player.flip , e.entity(player.x + 10, player.y + 12, 13, 1, 'arrow')])
+                    if player.flip == False: arrow_objects.append([player.flip , e.entity(player.x + 13, player.y + 12, 13, 1, 'arrow')])
+                    else: arrow_objects.append([player.flip , e.entity(player.x - 13, player.y + 12, 13, 1, 'arrow')])
                     arrow_cnt -= 1
                     
             if game_over == True:
