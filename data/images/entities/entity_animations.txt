@@ -13,3 +13,5 @@ monkey/idle/ 7;7 loop
 monkey/die/ 7;7;7;7  
 monkey/rage/ 7;7 loop   
 arrow/idle/ 1 
+arrow/die/ 5;5;5 
+club/idle/ 3;3;3;3;3 
