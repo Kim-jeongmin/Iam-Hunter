@@ -17,7 +17,7 @@ arrow_offence_power = 50
 is_night = False
 days = 0
 arrow_cnt = 10
-
+player_condition_count = 0
 true_scroll = [0,0]
 
 CHUNK_SIZE = 24
@@ -36,6 +36,11 @@ tree_img = pygame.image.load('data/images/tree.png')
 stone_img = pygame.image.load('data/images/stone.png')
 cloud_img = pygame.image.load('data/images/cloud.png')
 arrow_cnt_img = pygame.image.load('data/images/arrow_count.png')
+
+player_conditions = []
+for i in range(0, 3):
+    for _ in range(0, 13):
+        player_conditions.append(pygame.image.load('data/images/player_condition/condition_' + str(i) + '.png'))
 
 plant_img.set_colorkey((255,255,255))
 spike_img.set_colorkey((0,0,0))
@@ -59,6 +64,8 @@ arrow_objects= []
 enemies = []
 meats = []
 club = []
+
+
 
 
 
