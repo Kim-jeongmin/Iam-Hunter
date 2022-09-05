@@ -8,10 +8,12 @@ player/club/ 3;3;3;3;3
 bunny/idle/ 20;20 loop   
 bunny/die/ 7;7;7   
 bunny/rage/ 20;20 loop   
+bunny/hit/ 20 
 meat/idle/ 1 loop   
 monkey/idle/ 7;7 loop  
 monkey/die/ 7;7;7;7  
 monkey/rage/ 7;7 loop   
+monkey/hit/ 20 
 arrow/idle/ 1 
 arrow/die/ 5;5;5 
 club/idle/ 3;3;3;3;3 

@@ -257,6 +257,9 @@ while True: # game loop
                 if random.randint(0, 5) == 0:
                     meats.append([-2, e.entity(enemy[1].x, enemy[1].y, 16, 16, 'meat'), 0])
         
+        if enemy[1].action == 'hit':
+            if enemy[1].animation_frame >= len(e.animation_higher_database['monkey']['hit'][0]) - 1:
+                enemy[1].set_action('idle')
         
                 
 
@@ -292,22 +295,28 @@ while True: # game loop
     for c in club:
         
         if player.flip == True:
-            c[0].set_flip(True)
-            c[0].x = player.x - 10
+            c[0].x = player.x - 12
             c[0].y = player.y - 10
+            c[0].obj.rect.x = player.x - 12
+            c[0].obj.rect.y = player.y - 10
+            c[0].set_flip(True)
         elif player.flip == False:
-            c[0].set_flip(False)
             c[0].x = player.x 
             c[0].y = player.y - 10
-        
+            c[0].obj.rect.x = player.x
+            c[0].obj.rect.y = player.y - 10
+            c[0].set_flip(False)
 
         for enemy in enemies:
             if enemy[1].obj.rect.colliderect(c[0].obj.rect):
-                enemy[2] -= 30
+                if enemy[1].action == 'idle' or enemy[1].action == 'rage':
+                    enemy[2] -= 30
+                enemy[1].set_action('hit')
+                
                 if player.flip == False:
-                    enemy[1].x += 3
+                    enemy[1].x += 5
                 else :
-                    enemy[1].x -= 3
+                    enemy[1].x -= 5
 
         c[0].change_frame(1)
         c[0].display(display, scroll)
@@ -451,7 +460,7 @@ while True: # game loop
                         vertical_momentum = -5
                 if event.key == K_a and not is_wielding_club:
                     is_wielding_club = True
-                    club.append([e.entity(player.x, player.y-13, 22, 29, 'club')])
+                    club.append([e.entity(player.x + 12, player.y-13, 22, 29, 'club')])
                         
                        
                     
