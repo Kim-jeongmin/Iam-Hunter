@@ -1,4 +1,3 @@
-from dis import dis
 import pygame, sys, os, random, noise
 import data.engine as e
 import main_menu as mm
@@ -96,7 +95,6 @@ for i in range(2):
     enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
     enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50) , 15, 20, 'monkey'), 100])
     
-
 mm.show_start_screen()
 
 pygame.mixer.music.load('data/audio/noon.wav')
@@ -122,7 +120,9 @@ while True: # game loop
     
 
     game_time += 1
-    game_time %= 3000
+    if game_time >= 3000: 
+        game_time = 0
+        days += 1
     
     if grass_sound_timer > 0:
         grass_sound_timer -= 1
@@ -232,7 +232,7 @@ while True: # game loop
                 if not game_over : 
                     hit_sound.play()
                     vertical_momentum = -4
-                current_health -= 3
+                current_health -= 3 + days
                 player_movement[0] += 4
                 is_hitted = True
                 hit_cooldown = 30
@@ -248,7 +248,7 @@ while True: # game loop
                     elif arrow[0] == False:
                         enemy[1].x += 2
 
-            if enemy[2] == 0:
+            if enemy[2] <= 0:
                 enemy[1].set_action('die')
                 enemy[0] = -4
                 
@@ -289,6 +289,28 @@ while True: # game loop
         meat[1].change_frame(1)
         meat[1].display(display, scroll)
 
+    for c in club:
+        
+        if player.flip == True:
+            c[0].set_flip(True)
+            c[0].x = player.x - 10
+            c[0].y = player.y - 10
+        elif player.flip == False:
+            c[0].set_flip(False)
+            c[0].x = player.x 
+            c[0].y = player.y - 10
+        
+
+        for enemy in enemies:
+            if enemy[1].obj.rect.colliderect(c[0].obj.rect):
+                enemy[2] -= 30
+                if player.flip == False:
+                    enemy[1].x += 3
+                else :
+                    enemy[1].x -= 3
+
+        c[0].change_frame(1)
+        c[0].display(display, scroll)
 
     for arrow in arrow_objects:
         
@@ -377,13 +399,14 @@ while True: # game loop
                 player.set_action('run')
         if is_wielding_club:
             player.set_action('club')
+            
             if player.animation_frame >= len(e.animation_higher_database['player']['club'][0]) - 1:
                 is_wielding_club = False
+                club.clear()
+                player.set_action('idle')
                 
-                # if player.flip == True: 
-                #     player.set_action('idle')
-                #     player.obj.x += 16
-                #     player.obj.y += 9
+                
+                    
         elif is_shooting_arrow:
             player.set_action('arrow')
             if player.animation_frame >= len(e.animation_higher_database['player']['arrow'][0]) - 1:
@@ -426,11 +449,11 @@ while True: # game loop
                     if air_timer < 6:
                         jump_sound.play()
                         vertical_momentum = -5
-                if event.key == K_a:
+                if event.key == K_a and not is_wielding_club:
                     is_wielding_club = True
-                    # if player.flip == True: 
-                    #     player.obj.x -= 16
-                    #     player.obj.y -= 9
+                    club.append([e.entity(player.x, player.y-13, 22, 29, 'club')])
+                        
+                       
                     
                 elif event.key == K_s and arrow_cnt:
                     is_shooting_arrow = True
@@ -471,10 +494,12 @@ while True: # game loop
     pygame.draw.rect(display, GREEN, (10, 10, current_health, 5))
 
     score_board = game_font.render('score : ' + str(score), True, (255, 255, 255))
+    day_board = game_font.render('days : ' + str(days), True, (255, 255, 255))
     #arrow_board = game_font.render('arrow : ' + str(arrow_cnt), True, (255, 255, 255))
     
     screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 10))
-    screen.blit(score_board, (10, 50))
+    screen.blit(score_board, (20, 50))
+    screen.blit(day_board, (1050, 20))
     #screen.blit(arrow_board, (10, 90))
 
     for i in range(1, arrow_cnt+1):

@@ -15,7 +15,7 @@ max_health = 200
 hit_cooldown = 0
 arrow_offence_power = 50
 is_night = False
-
+days = 0
 arrow_cnt = 10
 
 true_scroll = [0,0]
@@ -58,6 +58,7 @@ bullet_objects = []
 arrow_objects= []
 enemies = []
 meats = []
+club = []
 
 
 
