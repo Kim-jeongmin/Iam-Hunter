@@ -1,3 +1,4 @@
+from dis import dis
 import pygame, sys, os, random, noise
 import data.engine as e
 import main_menu as mm
@@ -9,7 +10,7 @@ pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init() # initiates pygame
 pygame.mixer.set_num_channels(64)
 
-pygame.display.set_caption('Pygame Platformer')
+pygame.display.set_caption('I\'m Hunter')
 
 WINDOW_SIZE = (1200,800)
 game_font = pygame.font.SysFont( "arial", 30, True, False)
@@ -67,12 +68,14 @@ e.load_animations('data/images/entities/')
 
 arrow_shoot_sound = pygame.mixer.Sound('data/audio/arrow.wav')
 hit_sound = pygame.mixer.Sound('data/audio/hit.wav')
+wielding_sound = pygame.mixer.Sound('data/audio/wield.wav')
 jump_sound = pygame.mixer.Sound('data/audio/jump.wav')
 grass_sounds = [pygame.mixer.Sound('data/audio/grass_0.wav'),pygame.mixer.Sound('data/audio/grass_1.wav')]
 arrow_shoot_sound.set_volume(0.2)
 hit_sound.set_volume(0.2)
 grass_sounds[0].set_volume(0.2)
 grass_sounds[1].set_volume(0.2)
+wielding_sound.set_volume(0.4)
 
 
 
@@ -184,11 +187,11 @@ while True: # game loop
     player.display(display, scroll)
 
     if not enemies:
-        for i in range(3):
+        for i in range(3+days):
             enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
             enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50), 15, 20, 'monkey'), 100])
 
-
+    
     for enemy in enemies:
         enemy[0] += 0.2
 
@@ -232,7 +235,7 @@ while True: # game loop
                 if not game_over : 
                     hit_sound.play()
                     vertical_momentum = -4
-                current_health -= 3 + days
+                current_health -= 10 + days * 2
                 player_movement[0] += 4
                 is_hitted = True
                 hit_cooldown = 30
@@ -308,11 +311,15 @@ while True: # game loop
             c[0].set_flip(False)
 
         for enemy in enemies:
-            if enemy[1].obj.rect.colliderect(c[0].obj.rect):
+            if not enemy[1].action == 'die' and enemy[1].obj.rect.colliderect(c[0].obj.rect):
                 if enemy[1].action == 'idle' or enemy[1].action == 'rage':
                     enemy[2] -= 30
-                enemy[1].set_action('hit')
-                
+                if enemy[2] > 0: 
+                    enemy[1].set_action('hit')
+                    enemy[0] = -2
+
+
+
                 if player.flip == False:
                     enemy[1].x += 5
                 else :
@@ -461,7 +468,7 @@ while True: # game loop
                 if event.key == K_a and not is_wielding_club:
                     is_wielding_club = True
                     club.append([e.entity(player.x + 12, player.y-13, 22, 29, 'club')])
-                        
+                    wielding_sound.play()
                        
                     
                 elif event.key == K_s and arrow_cnt:
@@ -499,20 +506,27 @@ while True: # game loop
     
 
     # hp bar
-    pygame.draw.rect(display, RED, (10, 10, max_health, 5))
-    pygame.draw.rect(display, GREEN, (10, 10, current_health, 5))
+    pygame.draw.rect(display, RED, (45, 23, max_health, 5))
+    pygame.draw.rect(display, GREEN, (45, 23, current_health, 5))
 
     score_board = game_font.render('score : ' + str(score), True, (255, 255, 255))
     day_board = game_font.render('days : ' + str(days), True, (255, 255, 255))
     #arrow_board = game_font.render('arrow : ' + str(arrow_cnt), True, (255, 255, 255))
     
-    screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 10))
-    screen.blit(score_board, (20, 50))
+    screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 0))
+    screen.blit(score_board, (20, 80))
     screen.blit(day_board, (1050, 20))
     #screen.blit(arrow_board, (10, 90))
 
+    # player condition
+    
+    screen.blit(player_conditions[player_condition_count], (10, 10))
+    player_condition_count += 1
+    if player_condition_count >= len(player_conditions) - 1:
+        player_condition_count = 0
+
     for i in range(1, arrow_cnt+1):
-        screen.blit(arrow_cnt_img, (20*i, 90))
+        screen.blit(arrow_cnt_img, (20*i, 120))
 
     
     pygame.display.update()

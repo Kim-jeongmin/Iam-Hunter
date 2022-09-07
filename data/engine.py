@@ -34,28 +34,28 @@ class map_obj():
         map_obj_rect = self.get_rect()
         return map_obj_rect.colliderect(rect)
 
-class spike(map_obj):
-    def __init__(self, loc):
-        super().__init__(loc)
+# class spike(map_obj):
+#     def __init__(self, loc):
+#         super().__init__(loc)
         
-    def get_rect(self):
-        return pygame.Rect(self.loc[0], self.loc[1], 14, 13)
+#     def get_rect(self):
+#         return pygame.Rect(self.loc[0], self.loc[1], 14, 13)
 
-class jump_pole(map_obj):
-    def __init__(self, loc):
-        super().__init__(loc)
+# class jump_pole(map_obj):
+#     def __init__(self, loc):
+#         super().__init__(loc)
         
-    def get_rect(self):
-        return pygame.Rect(self.loc[0], self.loc[1], 11, 16)
+#     def get_rect(self):
+#         return pygame.Rect(self.loc[0], self.loc[1], 11, 16)
 
 
-class bullet(map_obj):
-    def __init__(self, loc, flip):
-        super().__init__(loc)
-        self.flip = flip
+# class bullet(map_obj):
+#     def __init__(self, loc, flip):
+#         super().__init__(loc)
+#         self.flip = flip
 
-    def get_rect(self):
-        return pygame.Rect(self.loc[0], self.loc[1], 1, 1)
+#     def get_rect(self):
+#         return pygame.Rect(self.loc[0], self.loc[1], 1, 1)
 
 
     
@@ -279,4 +279,5 @@ def load_animations(path):
         if entity_type not in animation_higher_database:
             animation_higher_database[entity_type] = {}
         animation_higher_database[entity_type][animation_id] = [anim.copy(),tags]
+
 
