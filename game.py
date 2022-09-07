@@ -1,4 +1,3 @@
-from dis import dis
 import pygame, sys, os, random, noise
 import data.engine as e
 import main_menu as mm
@@ -100,9 +99,7 @@ for i in range(2):
     
 mm.show_start_screen()
 
-pygame.mixer.music.load('data/audio/noon.wav')
-pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(0.5)
+
 
 
 while True: # game loop
@@ -112,13 +109,23 @@ while True: # game loop
         is_night = False
     elif 1200 < game_time <= 1300: display.fill((243,138,110)) 
     elif 1300 < game_time <= 1400: display.fill((201,109,127))
-    elif 1400 < game_time <= 1500: display.fill((125,94,128))
+    elif 1400 < game_time <= 1500: 
+        display.fill((125,94,128))
     elif 1500 < game_time <= 1600: display.fill((87,68,111))
     else: 
         display.fill((19,26,98))
         is_night = True
     
+    if game_time == 1400: pygame.mixer.music.fadeout(1000)
 
+    if game_time == 1500: 
+        pygame.mixer.music.load('data/audio/night.wav')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.5)
+    if game_time == 0:
+        pygame.mixer.music.load('data/audio/noon.wav')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.5)
     game_time += 1
     if game_time >= 3000: 
         game_time = 0
@@ -203,10 +210,10 @@ while True: # game loop
                 enemy[1].set_flip(False)
         if enemy[1].action == 'rage':
             if player.x > enemy[1].x + 5:
-                enemy_movement[0] = 2
+                enemy_movement[0] = 1.5
                 enemy[1].set_flip(True)
             if player.x < enemy[1].x - 5:
-                enemy_movement[0] = -2
+                enemy_movement[0] = -1.5
                 enemy[1].set_flip(False)
         
         if is_night and enemy[1].action == 'idle':
@@ -513,7 +520,7 @@ while True: # game loop
     #arrow_board = game_font.render('arrow : ' + str(arrow_cnt), True, (255, 255, 255))
     
     screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 0))
-    screen.blit(score_board, (20, 80))
+    screen.blit(score_board, (600, 20))
     screen.blit(day_board, (1050, 20))
     #screen.blit(arrow_board, (10, 90))
 
@@ -528,7 +535,7 @@ while True: # game loop
         player_condition_count = 0
 
     for i in range(1, arrow_cnt+1):
-        screen.blit(arrow_cnt_img, (20*i, 120))
+        screen.blit(arrow_cnt_img, (20*i + 70, 70))
 
     
     pygame.display.update()
