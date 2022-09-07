@@ -108,13 +108,10 @@ pygame.mixer.music.set_volume(0.5)
 while True: # game loop
     clock.tick(60)
     if game_time <= 1200 : 
-        
         display.fill((146,244,255)) # clear screen by filling it with blue
         is_night = False
     elif 1200 < game_time <= 1300: display.fill((243,138,110)) 
-    elif 1300 < game_time <= 1400: 
-        display.fill((201,109,127))
-        # pygame.mixer.music.fadeout(2000)
+    elif 1300 < game_time <= 1400: display.fill((201,109,127))
     elif 1400 < game_time <= 1500: display.fill((125,94,128))
     elif 1500 < game_time <= 1600: display.fill((87,68,111))
     else: 
@@ -492,6 +489,8 @@ while True: # game loop
                     arrow_objects.clear()
                     meats.clear()
                     pygame.mixer.music.play()
+                    days = 0
+                    arrow_cnt = 10
                     game_time = 0
                     for i in range(3):
                         enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
@@ -519,10 +518,13 @@ while True: # game loop
     #screen.blit(arrow_board, (10, 90))
 
     # player condition
+    if current_health >= 100: screen.blit(player_conditions['healthy'][player_condition_count], (10, 10))
+    elif 100 > current_health and current_health >= 40: screen.blit(player_conditions['hurt'][player_condition_count], (10, 10))
+    elif 40 > current_health and current_health > 0: screen.blit(player_conditions['neardeath'][player_condition_count], (10, 10))
+    else: screen.blit(player_conditions['death'][0], (10, 10))
     
-    screen.blit(player_conditions[player_condition_count], (10, 10))
     player_condition_count += 1
-    if player_condition_count >= len(player_conditions) - 1:
+    if player_condition_count > 44:
         player_condition_count = 0
 
     for i in range(1, arrow_cnt+1):

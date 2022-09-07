@@ -37,10 +37,19 @@ stone_img = pygame.image.load('data/images/stone.png')
 cloud_img = pygame.image.load('data/images/cloud.png')
 arrow_cnt_img = pygame.image.load('data/images/arrow_count.png')
 
-player_conditions = []
+player_conditions = {}
+player_conditions['healthy'] = {}
+player_conditions['hurt'] = {}
+player_conditions['neardeath'] = {}
+player_conditions['death'] = {}
+
 for i in range(0, 3):
-    for _ in range(0, 13):
-        player_conditions.append(pygame.image.load('data/images/player_condition/condition_' + str(i) + '.png'))
+    for j in range(0, 15):
+        player_conditions['healthy'][j + i*15] = pygame.image.load('data/images/player_condition/healthy_' + str(i) + '.png')
+        player_conditions['hurt'][j + i*15] = pygame.image.load('data/images/player_condition/hurt_' + str(i) + '.png')
+        player_conditions['neardeath'][j + i*15] = pygame.image.load('data/images/player_condition/neardeath_' + str(i) + '.png')
+
+player_conditions['death'][0] = pygame.image.load('data/images/player_condition/death_' + str(0) + '.png')
 
 plant_img.set_colorkey((255,255,255))
 spike_img.set_colorkey((0,0,0))
