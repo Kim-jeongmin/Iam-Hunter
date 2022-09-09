@@ -17,3 +17,4 @@ monkey/hit/ 20
 arrow/idle/ 1 
 arrow/die/ 5;5;5 
 club/idle/ 3;3;3;3;3 
+airplane/idle/ 1 loop 

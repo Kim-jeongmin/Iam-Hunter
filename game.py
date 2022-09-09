@@ -10,9 +10,8 @@ pygame.init() # initiates pygame
 pygame.mixer.set_num_channels(64)
 
 pygame.display.set_caption('I\'m Hunter')
-
 WINDOW_SIZE = (1200,800)
-game_font = pygame.font.SysFont( "arial", 30, True, False)
+my_big_font = e.Font('data/font/large_font.png')
 screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # initiate the window
 
 display = pygame.Surface((600,400)) # used as the surface for rendering, which is scaled
@@ -80,10 +79,11 @@ wielding_sound.set_volume(0.4)
 
 
 
+player = e.entity(0,0,10,26,'player')
 
-player = e.entity(100,0,10,26,'player')
 
-
+airplane=0
+club 
 
 
 
@@ -104,6 +104,7 @@ mm.show_start_screen()
 
 while True: # game loop
     clock.tick(60)
+    if game_time == 0: airplane = e.entity(player.x+400, -50, 16, 12, 'airplane')
     if game_time <= 1200 : 
         display.fill((146,244,255)) # clear screen by filling it with blue
         is_night = False
@@ -113,6 +114,10 @@ while True: # game loop
         display.fill((125,94,128))
     elif 1500 < game_time <= 1600: display.fill((87,68,111))
     else: 
+        if game_time == 1601: 
+            for i in range(5):
+                enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
+                enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50) , 15, 20, 'monkey'), 100])
         display.fill((19,26,98))
         is_night = True
     
@@ -195,7 +200,7 @@ while True: # game loop
             enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
             enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50), 15, 20, 'monkey'), 100])
 
-    
+    # 적 
     for enemy in enemies:
         enemy[0] += 0.2
 
@@ -267,6 +272,7 @@ while True: # game loop
         if enemy[1].action == 'hit':
             if enemy[1].animation_frame >= len(e.animation_higher_database['monkey']['hit'][0]) - 1:
                 enemy[1].set_action('idle')
+
         
                 
 
@@ -275,10 +281,11 @@ while True: # game loop
         
         # hp bar
         pygame.draw.rect(display, RED, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, 20, 2))
-        pygame.draw.rect(display, GREEN, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, enemy[2] / 5, 2))
+        pygame.draw.rect(display, GREEN, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, enemy[2]/ 5, 2))
         enemy[1].change_frame(1)
         enemy[1].display(display, scroll)
     
+    # 고기
     for meat in meats:
         meat[2] += 0.1
 
@@ -299,6 +306,7 @@ while True: # game loop
         meat[1].change_frame(1)
         meat[1].display(display, scroll)
 
+    # 방망이
     for c in club:
         
         if player.flip == True:
@@ -332,6 +340,7 @@ while True: # game loop
         c[0].change_frame(1)
         c[0].display(display, scroll)
 
+    # 화살
     for arrow in arrow_objects:
         
         
@@ -360,7 +369,11 @@ while True: # game loop
             
             
             
-    
+    airplane_movement = [-2,0]
+    collision_types = airplane.move(airplane_movement, tile_rects)
+
+    airplane.change_frame(1)
+    airplane.display(display, scroll)
 
         
 
@@ -444,7 +457,7 @@ while True: # game loop
         
         player.set_action('die')
 
-
+        club.clear()
         pygame.mixer.music.stop()
         if player.animation_frame >= len(e.animation_higher_database['player']['die'][0]) - 1:
             if game_over_timer == 10 : 
@@ -514,14 +527,16 @@ while True: # game loop
     # hp bar
     pygame.draw.rect(display, RED, (45, 23, max_health, 5))
     pygame.draw.rect(display, GREEN, (45, 23, current_health, 5))
-
-    score_board = game_font.render('score : ' + str(score), True, (255, 255, 255))
-    day_board = game_font.render('days : ' + str(days), True, (255, 255, 255))
+    
+    # score_board = game_font.render('score : ' + str(score), True, (255, 255, 255))
+    # day_board = game_font.render('days : ' + str(days), True, (255, 255, 255))
     #arrow_board = game_font.render('arrow : ' + str(arrow_cnt), True, (255, 255, 255))
     
     screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 0))
-    screen.blit(score_board, (600, 20))
-    screen.blit(day_board, (1050, 20))
+    score_board = my_big_font.render(screen, 'score : ' + str(score), (600, 20))
+    day_board = my_big_font.render(screen,'days : ' + str(days) , (1050, 20) )
+    # screen.blit(score_board, (600, 20))
+    # screen.blit(day_board, (1050, 20))
     #screen.blit(arrow_board, (10, 90))
 
     # player condition
