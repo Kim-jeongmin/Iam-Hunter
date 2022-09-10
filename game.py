@@ -93,10 +93,11 @@ club
 #for i in range(5):
 #    jump_pole_objects.append(e.jump_pole((random.randint(0, 600)-300, 90)))
 
+
 for i in range(2):
     enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
     enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50) , 15, 20, 'monkey'), 100])
-    
+  
 mm.show_start_screen()
 
 
@@ -104,7 +105,7 @@ mm.show_start_screen()
 
 while True: # game loop
     clock.tick(60)
-    if game_time == 0: airplane = e.entity(player.x+400, -50, 16, 12, 'airplane')
+    if game_time == 0: airplane = e.entity(player.x+400, -150, 16, 12, 'airplane')
     if game_time <= 1200 : 
         display.fill((146,244,255)) # clear screen by filling it with blue
         is_night = False
@@ -369,13 +370,14 @@ while True: # game loop
             
             
             
-    airplane_movement = [-2,0]
+    airplane_movement = [-3,0]
     collision_types = airplane.move(airplane_movement, tile_rects)
 
     airplane.change_frame(1)
     airplane.display(display, scroll)
 
-        
+    if  player.x < airplane.x and airplane.x <= player.x + 1:
+        meats.append([-2, e.entity(airplane.x, airplane.y + 5, 16, 16, 'meat'), 0])
 
         
         
