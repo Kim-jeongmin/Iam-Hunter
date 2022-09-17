@@ -72,8 +72,7 @@ bullet_objects = []
 arrow_objects= []
 enemies = []
 meats = []
-club = []
-
+items = []
 
 
 

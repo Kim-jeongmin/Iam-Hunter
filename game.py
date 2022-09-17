@@ -83,8 +83,7 @@ player = e.entity(0,0,10,26,'player')
 
 
 airplane=0
-club 
-
+club=0
 
 
 #for i in range(5):
@@ -287,67 +286,43 @@ while True: # game loop
         enemy[1].change_frame(1)
         enemy[1].display(display, scroll)
     
-    # 고기
-    for meat in meats:
-        meat[2] += 0.1
 
-        if meat[2] >= 50: 
-            meats.remove(meat)
-        meat[0] += 0.1
-        meat_movement = [0, meat[0]]
-
-        collision_types = meat[1].move(meat_movement, tile_rects)
-        
-        if collision_types['bottom']: 
-            meat[0] = 0
-
-        if player.obj.rect.colliderect(meat[1].obj.rect):
-            current_health += 30
-            meats.remove(meat)
-
-        meat[1].change_frame(1)
-        meat[1].display(display, scroll)
 
     # 방망이
-    for c in club:
-        
+    
+    if club != 0:    
         if player.flip == True:
-            c[0].x = player.x - 12
-            c[0].y = player.y - 10
-            c[0].obj.rect.x = player.x - 12
-            c[0].obj.rect.y = player.y - 10
-            c[0].set_flip(True)
+            club.x = player.x - 12
+            club.y = player.y - 10
+            club.obj.rect.x = player.x - 12
+            club.obj.rect.y = player.y - 10
+            club.set_flip(True)
         elif player.flip == False:
-            c[0].x = player.x 
-            c[0].y = player.y - 10
-            c[0].obj.rect.x = player.x
-            c[0].obj.rect.y = player.y - 10
-            c[0].set_flip(False)
+            club.x = player.x 
+            club.y = player.y - 10
+            club.obj.rect.x = player.x
+            club.obj.rect.y = player.y - 10
+            club.set_flip(False)
 
         for enemy in enemies:
-            if not enemy[1].action == 'die' and enemy[1].obj.rect.colliderect(c[0].obj.rect):
+            if not enemy[1].action == 'die' and enemy[1].obj.rect.colliderect(club.obj.rect):
                 if enemy[1].action == 'idle' or enemy[1].action == 'rage':
                     enemy[2] -= 30
                 if enemy[2] > 0: 
                     enemy[1].set_action('hit')
                     enemy[0] = -2
 
-
-
                 if player.flip == False:
                     enemy[1].x += 5
                 else :
                     enemy[1].x -= 5
 
-        c[0].change_frame(1)
-        c[0].display(display, scroll)
+        club.change_frame(1)
+        club.display(display, scroll)
 
     # 화살
     for arrow in arrow_objects:
-        
-        
-        
-            
+
         arrow_movement = [0, 0]    
             
         if arrow[0] == False:
@@ -368,9 +343,27 @@ while True: # game loop
 
         arrow[1].change_frame(1)
         arrow[1].display(display, scroll)
+
+    # 아이템        
+    for item in items:        
+        item_movement = [0,3]
+        
+        item[0].move(item_movement, tile_rects)
+
+        if player.obj.rect.colliderect(item[0].obj.rect):
+            if item[0].type == 'arrow_item' :  arrow_cnt += 5
+            if item[0].type == 'meat' : current_health += 30
             
             
+            items.remove(item)
+
             
+
+        item[0].change_frame(1)
+        item[0].display(display, scroll)
+
+        
+    # 비행기
     airplane_movement = [-3,0]
     collision_types = airplane.move(airplane_movement, tile_rects)
 
@@ -378,8 +371,9 @@ while True: # game loop
     airplane.display(display, scroll)
 
     if  player.x - 1 <= airplane.x and airplane.x <= player.x + 1:
-        meats.append([-2, e.entity(airplane.x, airplane.y + 5, 16, 16, 'meat'), 0])
-
+        r = random.randint(1, 2)
+        if r == 1 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'meat')])
+        elif r == 2 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'arrow_item')])
         
         
     """
@@ -444,7 +438,7 @@ while True: # game loop
                     
                     if player.animation_frame >= len(e.animation_higher_database['player']['club'][0]) - 1:
                         is_wielding_club = False
-                        club.clear()
+                        club = 0
                         player.set_action('idle')
                 if is_shooting_arrow:
                     player.set_action('arrow')
@@ -460,7 +454,7 @@ while True: # game loop
         
         player.set_action('die')
 
-        club.clear()
+        club = 0
         pygame.mixer.music.stop()
         if player.animation_frame >= len(e.animation_higher_database['player']['die'][0]) - 1:
             if game_over_timer == 10 : 
@@ -487,7 +481,7 @@ while True: # game loop
                         vertical_momentum = -5
                 if event.key == K_a and not is_wielding_club:
                     is_wielding_club = True
-                    club.append([e.entity(player.x + 12, player.y-13, 22, 29, 'club')])
+                    club = e.entity(player.x + 12, player.y-13, 22, 29, 'club')
                     wielding_sound.play()
                        
                     
