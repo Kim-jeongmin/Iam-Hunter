@@ -1,4 +1,5 @@
 import pygame
+from data.engine import Font
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 clock = pygame.time.Clock()
@@ -7,6 +8,8 @@ screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # initiate the window
 frame_timer = 0
 title_idx = 0
 
+my_big_font = Font('data/font/large_font.png')
+background_img = pygame.image.load('data/images/main_background.png')
 title_images_base_path = 'data/images/title/game_title_'
 title_images = []
 for i in range(0, 10):
@@ -28,7 +31,9 @@ def show_start_screen():
     global frame_timer, title_idx
     waiting = True
     while waiting:
-        screen.fill((0,0,0))
+
+        screen.blit(background_img,(0, 0))
+        #screen.fill((0,0,0))
         clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -45,8 +50,9 @@ def show_start_screen():
         else : frame_timer += 1
 
         if title_idx > len(title_images) - 1  : title_idx = 0
-        draw_text("Press any key to play", 22, (255, 255, 255), 600, 800-150)
-        screen.blit(title_images[title_idx],(190, 50))
+        my_big_font.render(screen, "Press any key to play", (450, 700))
+        screen.blit(title_images[title_idx],(190, 120))
+        
         pygame.display.update()
     
     
