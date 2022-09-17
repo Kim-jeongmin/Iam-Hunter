@@ -245,7 +245,8 @@ while True: # game loop
                 if not game_over : 
                     hit_sound.play()
                     vertical_momentum = -4
-                current_health -= 10 + days * 2
+                if enemy[1].type == 'bunny' : current_health -= 10 + days * 2
+                elif enemy[1].type == 'monkey' : current_health -= 20 + days * 3
                 player_movement[0] += 4
                 is_hitted = True
                 hit_cooldown = 30
@@ -376,7 +377,7 @@ while True: # game loop
     airplane.change_frame(1)
     airplane.display(display, scroll)
 
-    if  player.x < airplane.x and airplane.x <= player.x + 1:
+    if  player.x - 1 <= airplane.x and airplane.x <= player.x + 1:
         meats.append([-2, e.entity(airplane.x, airplane.y + 5, 16, 16, 'meat'), 0])
 
         
@@ -432,25 +433,25 @@ while True: # game loop
             if player_movement[0] < 0:
                 player.set_flip(True)
                 player.set_action('run')
-        if is_wielding_club:
-            player.set_action('club')
-            
-            if player.animation_frame >= len(e.animation_higher_database['player']['club'][0]) - 1:
-                is_wielding_club = False
-                club.clear()
-                player.set_action('idle')
-                
-                
+        else :
+            if is_hitted:
+                player.set_action('hit')
+                if player.animation_frame >= len(e.animation_higher_database['player']['hit'][0]) - 1:
+                    is_hitted = False     
+            else :                                             
+                if is_wielding_club:
+                    player.set_action('club')
                     
-        elif is_shooting_arrow:
-            player.set_action('arrow')
-            if player.animation_frame >= len(e.animation_higher_database['player']['arrow'][0]) - 1:
-                is_shooting_arrow = False
-        
-        elif is_hitted:
-            player.set_action('hit')
-            if player.animation_frame >= len(e.animation_higher_database['player']['hit'][0]) - 1:
-                is_hitted = False
+                    if player.animation_frame >= len(e.animation_higher_database['player']['club'][0]) - 1:
+                        is_wielding_club = False
+                        club.clear()
+                        player.set_action('idle')
+                if is_shooting_arrow:
+                    player.set_action('arrow')
+                    if player.animation_frame >= len(e.animation_higher_database['player']['arrow'][0]) - 1:
+                        is_shooting_arrow = False
+            
+            
             
 
     if game_over:
@@ -530,16 +531,12 @@ while True: # game loop
     pygame.draw.rect(display, RED, (45, 23, max_health, 5))
     pygame.draw.rect(display, GREEN, (45, 23, current_health, 5))
     
-    # score_board = game_font.render('score : ' + str(score), True, (255, 255, 255))
-    # day_board = game_font.render('days : ' + str(days), True, (255, 255, 255))
-    #arrow_board = game_font.render('arrow : ' + str(arrow_cnt), True, (255, 255, 255))
+
     
     screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 0))
     score_board = my_big_font.render(screen, 'score : ' + str(score), (600, 20))
     day_board = my_big_font.render(screen,'days : ' + str(days) , (1050, 20) )
-    # screen.blit(score_board, (600, 20))
-    # screen.blit(day_board, (1050, 20))
-    #screen.blit(arrow_board, (10, 90))
+
 
     # player condition
     if current_health >= 100: screen.blit(player_conditions['healthy'][player_condition_count], (10, 10))
