@@ -353,7 +353,9 @@ while True: # game loop
         if player.obj.rect.colliderect(item[0].obj.rect):
             if item[0].type == 'arrow_item' :  arrow_cnt += 5
             if item[0].type == 'meat' : current_health += 30
-            
+            if item[0].type == 'volt_item' : volt_cnt += 1
+            if item[0].type == 'nut_item' : nut_cnt += 1
+            if item[0].type == 'steel_item' : steel_cnt += 1
             
             items.remove(item)
 
@@ -371,9 +373,12 @@ while True: # game loop
     airplane.display(display, scroll)
 
     if  player.x - 1 <= airplane.x and airplane.x <= player.x + 1:
-        r = random.randint(1, 2)
+        r = random.randint(5, 5)
         if r == 1 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'meat')])
         elif r == 2 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'arrow_item')])
+        elif r == 3 : items.append([e.entity(airplane.x, airplane.y + 5, 9, 9, 'volt_item')])
+        elif r == 4 : items.append([e.entity(airplane.x, airplane.y + 5, 12, 10, 'nut_item')])
+        elif r == 5 : items.append([e.entity(airplane.x, airplane.y + 5, 14, 12, 'steel_item')])
         
         
     """
@@ -501,7 +506,7 @@ while True: # game loop
                     
                     score = 0
                     current_health = 200
-                    player = e.entity(100,0,10,26,'player')
+                    player = e.entity(player.x,player.y,10,26,'player')
                     enemies.clear()
                     arrow_objects.clear()
                     meats.clear()
@@ -528,8 +533,18 @@ while True: # game loop
 
     
     screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 0))
-    score_board = my_big_font.render(screen, 'score : ' + str(score), (600, 20))
-    day_board = my_big_font.render(screen,'days : ' + str(days) , (1050, 20) )
+    score_board = my_big_font.render(screen, 'score : ' + str(score), (600, 15))
+    day_board = my_big_font.render(screen, 'days : ' + str(days) , (1050, 15) )
+
+    screen.blit(volt_img, (100, 20))
+    volt_board = my_big_font.render(screen, '  : ' + str(volt_cnt) + '/' + str(15) , (100, 15))  
+
+    screen.blit(nut_img, (230, 20))
+    nut_board = my_big_font.render(screen, '  : ' + str(nut_cnt) + '/' + str(15) , (230, 15))  
+
+
+    screen.blit(steel_img, (360, 20))
+    steel_board = my_big_font.render(screen, '  : ' + str(steel_cnt) + '/' + str(15) , (360, 15)) 
 
 
     # player condition

@@ -18,3 +18,7 @@ arrow/idle/ 1
 arrow/die/ 5;5;5 
 club/idle/ 3;3;3;3;3 
 airplane/idle/ 1 loop 
+arrow_item/idle/ 1 loop
+volt_item/idle/ 1 loop 
+nut_item/idle/ 1 loop 
+steel_item/idle/ 1 loop 

@@ -18,6 +18,9 @@ is_night = False
 days = 0
 arrow_cnt = 10
 player_condition_count = 0
+volt_cnt = 0
+nut_cnt = 0
+steel_cnt = 0
 true_scroll = [0,0]
 
 CHUNK_SIZE = 24
@@ -36,6 +39,9 @@ tree_img = pygame.image.load('data/images/tree.png')
 stone_img = pygame.image.load('data/images/stone.png')
 cloud_img = pygame.image.load('data/images/cloud.png')
 arrow_cnt_img = pygame.image.load('data/images/arrow_count.png')
+volt_img = pygame.image.load('data/images/volt.png')
+nut_img = pygame.image.load('data/images/nut.png')
+steel_img = pygame.image.load('data/images/steel.png')
 
 player_conditions = {}
 player_conditions['healthy'] = {}
