@@ -1,4 +1,4 @@
-import pygame, sys, os, random, noise
+import pygame, sys, random, noise
 import data.engine as e
 import main_menu as mm
 from settings import *
@@ -15,11 +15,6 @@ my_big_font = e.Font('data/font/large_font.png')
 screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # initiate the window
 
 display = pygame.Surface((600,400)) # used as the surface for rendering, which is scaled
-
-
-
-
-        
 
 def generate_chunk(x,y):
     chunk_data = []
@@ -104,7 +99,7 @@ mm.show_start_screen()
 
 while True: # game loop
     clock.tick(60)
-    if game_time == 0: airplane = e.entity(player.x+400, -150, 16, 12, 'airplane')
+    if game_time == 0: airplane = e.entity(player.x+400, player.y-150, 16, 12, 'airplane')
     if game_time <= 1200 : 
         display.fill((146,244,255)) # clear screen by filling it with blue
         is_night = False
@@ -264,9 +259,10 @@ while True: # game loop
             if enemy[2] <= 0:
                 enemy[1].set_action('die')
                 enemy[0] = -4
-                
-                score += 1
 
+                r = random.randint(1, 15)
+                if r == 1 : items.append([e.entity(enemy[1].x, enemy[1].y + 5, 16, 16, 'meat')])
+                
                 if random.randint(0, 5) == 0:
                     meats.append([-2, e.entity(enemy[1].x, enemy[1].y, 16, 16, 'meat'), 0])
         
@@ -274,11 +270,6 @@ while True: # game loop
             if enemy[1].animation_frame >= len(e.animation_higher_database['monkey']['hit'][0]) - 1:
                 enemy[1].set_action('idle')
 
-        
-                
-
-        
-        
         
         # hp bar
         pygame.draw.rect(display, RED, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, 20, 2))
@@ -366,16 +357,16 @@ while True: # game loop
 
         
     # 비행기
-    airplane_movement = [-3,0]
+    airplane_movement = [-2,0]
     collision_types = airplane.move(airplane_movement, tile_rects)
 
     airplane.change_frame(1)
     airplane.display(display, scroll)
 
     if  player.x - 1 <= airplane.x and airplane.x <= player.x + 1:
-        r = random.randint(5, 5)
-        if r == 1 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'meat')])
-        elif r == 2 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'arrow_item')])
+        r = random.randint(1, 5)
+        
+        if r == 2 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'arrow_item')])
         elif r == 3 : items.append([e.entity(airplane.x, airplane.y + 5, 9, 9, 'volt_item')])
         elif r == 4 : items.append([e.entity(airplane.x, airplane.y + 5, 12, 10, 'nut_item')])
         elif r == 5 : items.append([e.entity(airplane.x, airplane.y + 5, 14, 12, 'steel_item')])
@@ -483,7 +474,7 @@ while True: # game loop
                 if event.key == K_UP:
                     if air_timer < 6:
                         jump_sound.play()
-                        vertical_momentum = -5
+                        vertical_momentum = -3
                 if event.key == K_a and not is_wielding_club:
                     is_wielding_club = True
                     club = e.entity(player.x + 12, player.y-13, 22, 29, 'club')
@@ -506,7 +497,7 @@ while True: # game loop
                     
                     score = 0
                     current_health = 200
-                    player = e.entity(player.x,player.y,10,26,'player')
+                    player = e.entity(player.x,player.y - 100,10,26,'player')
                     enemies.clear()
                     arrow_objects.clear()
                     meats.clear()
@@ -514,6 +505,10 @@ while True: # game loop
                     days = 0
                     arrow_cnt = 10
                     game_time = 0
+                    
+                    volt_cnt = 0
+                    nut_cnt = 0
+                    steel_cnt = 0
                     for i in range(3):
                         enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
                         enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50), 15, 20, 'monkey'), 100])
@@ -533,19 +528,25 @@ while True: # game loop
 
     
     screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 0))
-    score_board = my_big_font.render(screen, 'score : ' + str(score), (600, 15))
+    #score_board = my_big_font.render(screen, 'score : ' + str(score), (600, 15))
     day_board = my_big_font.render(screen, 'days : ' + str(days) , (1050, 15) )
 
     screen.blit(volt_img, (100, 20))
-    volt_board = my_big_font.render(screen, '  : ' + str(volt_cnt) + '/' + str(15) , (100, 15))  
+    if volt_cnt > 7 : volt_cnt = 10 
+    volt_board = my_big_font.render(screen, '  : ' + str(volt_cnt) + '/' + str(7) , (100, 15))  
+    
 
     screen.blit(nut_img, (230, 20))
-    nut_board = my_big_font.render(screen, '  : ' + str(nut_cnt) + '/' + str(15) , (230, 15))  
+    if nut_cnt > 7 : nut_cnt = 10
+    nut_board = my_big_font.render(screen, '  : ' + str(nut_cnt) + '/' + str(7) , (230, 15))  
 
 
     screen.blit(steel_img, (360, 20))
-    steel_board = my_big_font.render(screen, '  : ' + str(steel_cnt) + '/' + str(15) , (360, 15)) 
+    if steel_cnt > 7 : steel_cnt = 10
+    steel_board = my_big_font.render(screen, '  : ' + str(steel_cnt) + '/' + str(10) , (360, 15)) 
 
+    if volt_cnt == 7 and nut_cnt == 7 and steel_cnt == 10:
+        game_clear = True
 
     # player condition
     if current_health >= 100: screen.blit(player_conditions['healthy'][player_condition_count], (10, 10))
