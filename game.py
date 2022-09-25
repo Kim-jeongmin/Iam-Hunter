@@ -1,6 +1,7 @@
 import pygame, sys, random, noise
 import data.engine as e
 import main_menu as mm
+import ending as end
 from settings import *
 clock = pygame.time.Clock()
 
@@ -23,31 +24,19 @@ def generate_chunk(x,y):
             target_x = x * CHUNK_SIZE  + x_pos
             target_y = y * CHUNK_SIZE + y_pos
             tile_type = 0 # nothing
-            height = 8 - int(noise.pnoise1(target_x * 0.1, repeat=999999) * 5)
-
-             
+            height = 8 - int(noise.pnoise1(target_x * 0.1, repeat=999999) * 5) 
             if target_y > height:
                 tile_type = 2 # dirt
             elif target_y == height :
                 tile_type = 1 # grass
             elif target_y == height - 1:
                 num = random.randint(1,20)
-                if num == 1:
-                    tile_type = 3 # plant
-                if num == 2:
-                    tile_type = 5
-            
+                if num == 1: tile_type = 3 # plant
+                if num == 2: tile_type = 5
             elif target_y == height - 3:
-
-                if random.randint(0, 10) == 0:
-                    tile_type = 4
-
+                if random.randint(0, 10) == 0: tile_type = 4
             elif height - 12 < target_y < height - 8:
-                if random.randint(1,50) == 1:
-                    tile_type = 6
-            #elif target_y == height - 3:
-            #    if random.randint(1,15) == 1:
-            #        tile_type = 4
+                if random.randint(1,50) == 1: tile_type = 6
             if tile_type != 0:
                 chunk_data.append([[target_x,target_y],tile_type])
     return chunk_data
@@ -81,11 +70,6 @@ airplane=0
 club=0
 
 
-#for i in range(5):
-#    spike_objects.append(e.spike((random.randint(0, 600)-300, 147)))
-
-#for i in range(5):
-#    jump_pole_objects.append(e.jump_pole((random.randint(0, 600)-300, 90)))
 
 
 for i in range(2):
@@ -94,12 +78,9 @@ for i in range(2):
   
 mm.show_start_screen()
 
-
-
-
 while True: # game loop
     clock.tick(60)
-    if game_time == 0: airplane = e.entity(player.x+400, player.y-150, 16, 12, 'airplane')
+    if game_time == 0: airplane = e.entity(player.x+400, player.y-170, 16, 12, 'airplane')
     if game_time <= 1200 : 
         display.fill((146,244,255)) # clear screen by filling it with blue
         is_night = False
@@ -272,8 +253,13 @@ while True: # game loop
 
         
         # hp bar
-        pygame.draw.rect(display, RED, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, 20, 2))
-        pygame.draw.rect(display, GREEN, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, enemy[2]/ 5, 2))
+        if enemy[1].type == 'bunny':
+            pygame.draw.rect(display, RED, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, 20, 2))
+            pygame.draw.rect(display, GREEN, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, enemy[2]/ 5 * 2, 2))
+        else:
+            pygame.draw.rect(display, RED, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, 20, 2))
+            pygame.draw.rect(display, GREEN, (enemy[1].x - scroll[0] - 5, enemy[1].y - scroll[1] - 10, enemy[2]/ 5, 2))
+        
         enemy[1].change_frame(1)
         enemy[1].display(display, scroll)
     
@@ -364,12 +350,12 @@ while True: # game loop
     airplane.display(display, scroll)
 
     if  player.x - 1 <= airplane.x and airplane.x <= player.x + 1:
-        r = random.randint(1, 5)
+        r = random.randint(1, 4)
         
-        if r == 2 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'arrow_item')])
-        elif r == 3 : items.append([e.entity(airplane.x, airplane.y + 5, 9, 9, 'volt_item')])
-        elif r == 4 : items.append([e.entity(airplane.x, airplane.y + 5, 12, 10, 'nut_item')])
-        elif r == 5 : items.append([e.entity(airplane.x, airplane.y + 5, 14, 12, 'steel_item')])
+        if r == 1 : items.append([e.entity(airplane.x, airplane.y + 5, 16, 16, 'arrow_item')])
+        elif r == 2 : items.append([e.entity(airplane.x, airplane.y + 5, 9, 9, 'volt_item')])
+        elif r == 3 : items.append([e.entity(airplane.x, airplane.y + 5, 12, 10, 'nut_item')])
+        elif r == 4 : items.append([e.entity(airplane.x, airplane.y + 5, 14, 12, 'steel_item')])
         
         
     """
@@ -532,21 +518,22 @@ while True: # game loop
     day_board = my_big_font.render(screen, 'days : ' + str(days) , (1050, 15) )
 
     screen.blit(volt_img, (100, 20))
-    if volt_cnt > 7 : volt_cnt = 10 
+    if volt_cnt > 7 : volt_cnt = 7 
     volt_board = my_big_font.render(screen, '  : ' + str(volt_cnt) + '/' + str(7) , (100, 15))  
     
 
     screen.blit(nut_img, (230, 20))
-    if nut_cnt > 7 : nut_cnt = 10
+    if nut_cnt > 7 : nut_cnt = 7
     nut_board = my_big_font.render(screen, '  : ' + str(nut_cnt) + '/' + str(7) , (230, 15))  
 
 
     screen.blit(steel_img, (360, 20))
-    if steel_cnt > 7 : steel_cnt = 10
+    if steel_cnt > 10 : steel_cnt = 10
     steel_board = my_big_font.render(screen, '  : ' + str(steel_cnt) + '/' + str(10) , (360, 15)) 
 
     if volt_cnt == 7 and nut_cnt == 7 and steel_cnt == 10:
-        game_clear = True
+        pygame.mixer.music.fadeout(1000)
+        break
 
     # player condition
     if current_health >= 100: screen.blit(player_conditions['healthy'][player_condition_count], (10, 10))
@@ -563,3 +550,5 @@ while True: # game loop
 
     
     pygame.display.update()
+
+end.ending()

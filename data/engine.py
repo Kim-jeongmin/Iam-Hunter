@@ -21,42 +21,6 @@ def collision_test(object_1,object_list):
             collision_list.append(obj)
     return collision_list
 
-class map_obj():
-    def __init__(self, loc):
-        self.loc = loc
-        
-    def render(self, surf, scroll, img):
-        surf.blit(img, (self.loc[0] - scroll[0], self.loc[1] - scroll[1]))
-    
-    
-
-    def collision_test(self, rect):
-        map_obj_rect = self.get_rect()
-        return map_obj_rect.colliderect(rect)
-
-# class spike(map_obj):
-#     def __init__(self, loc):
-#         super().__init__(loc)
-        
-#     def get_rect(self):
-#         return pygame.Rect(self.loc[0], self.loc[1], 14, 13)
-
-# class jump_pole(map_obj):
-#     def __init__(self, loc):
-#         super().__init__(loc)
-        
-#     def get_rect(self):
-#         return pygame.Rect(self.loc[0], self.loc[1], 11, 16)
-
-
-# class bullet(map_obj):
-#     def __init__(self, loc, flip):
-#         super().__init__(loc)
-#         self.flip = flip
-
-#     def get_rect(self):
-#         return pygame.Rect(self.loc[0], self.loc[1], 1, 1)
-
 
     
 
@@ -227,7 +191,8 @@ class entity(object):
             image_to_render = pygame.transform.rotate(image_to_render,self.rotation)
             if self.alpha != None:
                 image_to_render.set_alpha(self.alpha)
-            blit_center(surface,image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y))
+            blit_center(surface,image_to_render,
+            (int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y))
  
 # animation stuff
 
@@ -291,7 +256,10 @@ def clip(surf,x,y,x_size,y_size):
 class Font():
     def __init__(self, path):
         self.spacing = 1
-        self.character_order = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','.','-',',',':','+','\'','!','?','0','1','2','3','4','5','6','7','8','9','/','(',')','_','=','\\','[',']','*','"','<','>',';']
+        self.character_order = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S',
+        'T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s'
+        ,'t','u','v','w','x','y','z','.','-',',',':','+','\'','!','?','0','1','2','3','4','5','6','7','8','9','/',
+        '(',')','_','=','\\','[',']','*','"','<','>',';']
         font_img = pygame.image.load(path)
         current_char_width = 0
         self.characters = {}

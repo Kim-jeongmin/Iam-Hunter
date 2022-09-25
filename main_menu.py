@@ -21,8 +21,6 @@ click = False
 
 def show_start_screen():
     
-    
-    
     global frame_timer, title_idx
     waiting = True
     while waiting:
@@ -50,9 +48,9 @@ def show_start_screen():
             if click: 
                 Help()
 
-        pygame.draw.rect(screen, (255, 255, 255), button_1)
-        pygame.draw.rect(screen, (255, 255, 255), button_2)
-        pygame.draw.rect(screen, (255, 255, 255), button_3)
+        pygame.draw.rect(screen, pygame.Color(255, 255, 255, 128), button_1)
+        pygame.draw.rect(screen, pygame.Color(255, 255, 255, 128), button_2)
+        pygame.draw.rect(screen, pygame.Color(255, 255, 255, 128), button_3)
 
         click = False
 
@@ -71,7 +69,7 @@ def show_start_screen():
         else : frame_timer += 1
 
         if title_idx > len(title_images) - 1  : title_idx = 0
-        my_big_font.render(screen, "main story", (525, 630))
+        my_big_font.render(screen, "Main Story", (525, 630))
         my_big_font.render(screen, "Start Game", (525, 680))
         my_big_font.render(screen, "Help", (570, 730))
         screen.blit(title_images[title_idx],(190, 120))
@@ -94,7 +92,6 @@ def story():
     running = True
     clock.tick(60)
     while running:
-        my_big_font.render(screen, "story", (20, 20))
         
         screen.blit(story_images[story_idx], (0, 0))
         
@@ -124,7 +121,6 @@ def Help():
     running = True
     clock.tick(60)
     while running:
-        my_big_font.render(screen, "help", (20, 20))
 
         screen.blit(help_images[help_idx], (200, 100))
 
