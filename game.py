@@ -8,14 +8,14 @@ clock = pygame.time.Clock()
 from pygame.locals import *
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init() # initiates pygame
-pygame.mixer.set_num_channels(64)
+
 
 pygame.display.set_caption('I\'m Hunter')
 WINDOW_SIZE = (1200,800)
 my_big_font = e.Font('data/font/large_font.png')
-screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # initiate the window
+screen = pygame.display.set_mode(WINDOW_SIZE,0,32) 
 
-display = pygame.Surface((600,400)) # used as the surface for rendering, which is scaled
+display = pygame.Surface((600,400)) 
 
 def generate_chunk(x,y):
     chunk_data = []
@@ -47,16 +47,14 @@ e.load_animations('data/images/entities/')
 
 
 
-
+start_sound = pygame.mixer.Sound('data/audio/game_start_bgm.wav')
 arrow_shoot_sound = pygame.mixer.Sound('data/audio/arrow.wav')
 hit_sound = pygame.mixer.Sound('data/audio/hit.wav')
 wielding_sound = pygame.mixer.Sound('data/audio/wield.wav')
 jump_sound = pygame.mixer.Sound('data/audio/jump.wav')
-grass_sounds = [pygame.mixer.Sound('data/audio/grass_0.wav'),pygame.mixer.Sound('data/audio/grass_1.wav')]
+
 arrow_shoot_sound.set_volume(0.2)
 hit_sound.set_volume(0.2)
-grass_sounds[0].set_volume(0.2)
-grass_sounds[1].set_volume(0.2)
 wielding_sound.set_volume(0.4)
 
 
@@ -72,17 +70,15 @@ club=0
 
 
 
-for i in range(2):
-    enemies.append([0, e.entity(random.randint(player.x - 500, player.x - 400), random.randint(-100, -50), 15, 16, 'bunny'), 50])
-    enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50) , 15, 20, 'monkey'), 100])
-  
+start_sound.play()
 mm.show_start_screen()
+
 
 while True: # game loop
     clock.tick(60)
     if game_time == 0: airplane = e.entity(player.x+400, player.y-170, 16, 12, 'airplane')
     if game_time <= 1200 : 
-        display.fill((146,244,255)) # clear screen by filling it with blue
+        display.fill((146,244,255)) 
         is_night = False
     elif 1200 < game_time <= 1300: display.fill((243,138,110)) 
     elif 1300 < game_time <= 1400: display.fill((201,109,127))
@@ -96,6 +92,8 @@ while True: # game loop
                 enemies.append([0, e.entity(random.randint(player.x + 400, player.x + 500), random.randint(-100, -50) , 15, 20, 'monkey'), 100])
         display.fill((19,26,98))
         is_night = True
+    
+
     
     if game_time == 1400: pygame.mixer.music.fadeout(1000)
 
@@ -112,8 +110,7 @@ while True: # game loop
         game_time = 0
         days += 1
     
-    if grass_sound_timer > 0:
-        grass_sound_timer -= 1
+
 
     true_scroll[0] += (player.x-true_scroll[0]-304)/20
     true_scroll[1] += (player.y-true_scroll[1]-212)/20
@@ -137,7 +134,7 @@ while True: # game loop
                 if tile[1] in [1,2]:
                     tile_rects.append(pygame.Rect(tile[0][0]*16,tile[0][1]*16,16,16))    
 
-    # 이동
+
     player_movement = [0,0]
     if moving_right == True:
         player_movement[0] += 2
@@ -147,24 +144,15 @@ while True: # game loop
     vertical_momentum += 0.2
     if vertical_momentum > 3:
         vertical_momentum = 3
-
-    
-    
-        
-
-
-    # 이동 업데이트
     collision_types = player.move(player_movement, tile_rects)
 
 
-    # 땅에서 걸을 때 잔디 소리
+
     if collision_types['bottom']:
         air_timer = 0
         vertical_momentum = 0
-        if player_movement[0] != 0:
-            if grass_sound_timer == 0:
-                grass_sound_timer = 30
-                random.choice(grass_sounds).play()
+
+        
     else:
         air_timer += 1
 
@@ -231,11 +219,10 @@ while True: # game loop
 
                     arrow_objects.remove(arrow)
                     enemy[2] -= arrow_offence_power
+                    enemy[1].set_action('hit')
+                    enemy[0] = -2 
                     
-                    if arrow[0] == True: 
-                        enemy[1].x -= 2
-                    elif arrow[0] == False:
-                        enemy[1].x += 2
+                    
 
             if enemy[2] <= 0:
                 enemy[1].set_action('die')
@@ -244,8 +231,7 @@ while True: # game loop
                 r = random.randint(1, 15)
                 if r == 1 : items.append([e.entity(enemy[1].x, enemy[1].y + 5, 16, 16, 'meat')])
                 
-                if random.randint(0, 5) == 0:
-                    meats.append([-2, e.entity(enemy[1].x, enemy[1].y, 16, 16, 'meat'), 0])
+
         
         if enemy[1].action == 'hit':
             if enemy[1].animation_frame >= len(e.animation_higher_database['monkey']['hit'][0]) - 1:
@@ -343,6 +329,7 @@ while True: # game loop
 
         
     # 비행기
+    
     airplane_movement = [-2,0]
     collision_types = airplane.move(airplane_movement, tile_rects)
 
@@ -357,35 +344,7 @@ while True: # game loop
         elif r == 3 : items.append([e.entity(airplane.x, airplane.y + 5, 12, 10, 'nut_item')])
         elif r == 4 : items.append([e.entity(airplane.x, airplane.y + 5, 14, 12, 'steel_item')])
         
-        
-    """
-
-    for jump_pole in jump_pole_objects:
-        jump_pole.render(display, scroll, jump_pole_img)
-        if jump_pole.collision_test(player.obj.rect):
-            vertical_momentum = -7
-
-    for bullet in bullet_objects:
-        bullet.render(display, scroll, bullet_img)
-        if bullet.flip == True:
-            bullet.loc[0] -= 3
-        if bullet.flip == False:
-            bullet.loc[0] += 3
-        for spike in spike_objects:
-            if bullet.collision_test(spike.get_rect()):
-                bullet_objects.remove(bullet)
-                spike_objects.remove(spike)
-
-        for jump_pole in jump_pole_objects:
-            if bullet.collision_test(jump_pole.get_rect()):
-                bullet_objects.remove(bullet)
-
-
-    for spike in spike_objects:
-        spike.render(display, scroll, spike_img)
-        if spike.collision_test(player.obj.rect):
-            
-    """
+  
 
 
     if current_health <= 0: 
@@ -426,9 +385,6 @@ while True: # game loop
                     player.set_action('arrow')
                     if player.animation_frame >= len(e.animation_higher_database['player']['arrow'][0]) - 1:
                         is_shooting_arrow = False
-            
-            
-            
 
     if game_over:
         moving_right = False
@@ -451,8 +407,7 @@ while True: # game loop
             sys.exit()
         if event.type == KEYDOWN:
             if game_over == False:
-                # if event.key == K_w:
-                #     pygame.mixer.music.fadeout(1000)
+
                 if event.key == K_RIGHT:
                     moving_right = True
                 if event.key == K_LEFT:
@@ -486,7 +441,7 @@ while True: # game loop
                     player = e.entity(player.x,player.y - 100,10,26,'player')
                     enemies.clear()
                     arrow_objects.clear()
-                    meats.clear()
+
                     pygame.mixer.music.play()
                     days = 0
                     arrow_cnt = 10
@@ -514,7 +469,7 @@ while True: # game loop
 
     
     screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0, 0))
-    #score_board = my_big_font.render(screen, 'score : ' + str(score), (600, 15))
+
     day_board = my_big_font.render(screen, 'days : ' + str(days) , (1050, 15) )
 
     screen.blit(volt_img, (100, 20))

@@ -17,9 +17,9 @@ is_night = False
 days = 0
 arrow_cnt = 10
 player_condition_count = 0
-volt_cnt = 7
-nut_cnt = 7
-steel_cnt = 10
+volt_cnt = 0
+nut_cnt = 0
+steel_cnt = 0
 true_scroll = [0,0]
 
 CHUNK_SIZE = 24
@@ -76,7 +76,6 @@ jump_pole_objects = []
 bullet_objects = []
 arrow_objects= []
 enemies = []
-meats = []
 items = []
 
 

@@ -1,10 +1,13 @@
+
 import pygame
 from data.engine import Font
+
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 clock = pygame.time.Clock()
 WINDOW_SIZE = (1200,800)
 screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # initiate the window
+
 frame_timer = 0
 title_idx = 0
 
@@ -17,10 +20,13 @@ for i in range(0, 10):
 
 arrow_img = pygame.image.load('data/images/arrow.png')
 
+
+
 click = False
 
 def show_start_screen():
     
+  
     global frame_timer, title_idx
     waiting = True
     while waiting:
@@ -36,15 +42,15 @@ def show_start_screen():
         button_3 = pygame.Rect(500, 730, 200, 50)
 
         if button_1.collidepoint((mx, my)):
-            screen.blit(arrow_img, (420, 635))
+            if not click :screen.blit(arrow_img, (420, 635))
             if click:
                 story()
         if button_2.collidepoint((mx, my)):
-            screen.blit(arrow_img, (420, 685))
+            if not click :screen.blit(arrow_img, (420, 685))
             if click: 
                 waiting = False
         if button_3.collidepoint((mx, my)):
-            screen.blit(arrow_img, (420, 735))
+            if not click : screen.blit(arrow_img, (420, 735))
             if click: 
                 Help()
 
@@ -91,13 +97,8 @@ def story():
         story_images.append(pygame.image.load(story_images_base_path + str(i) + '.png'))
     running = True
     clock.tick(60)
-    while running:
-        
-        screen.blit(story_images[story_idx], (0, 0))
-        
-        
-
-        
+    while running:        
+        screen.blit(story_images[story_idx], (0, 0))        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -121,10 +122,7 @@ def Help():
     running = True
     clock.tick(60)
     while running:
-
         screen.blit(help_images[help_idx], (200, 100))
-
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -134,9 +132,7 @@ def Help():
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1: help_idx += 1
-
         if help_idx > 1 : running = False
-        
         pygame.display.update()
         
 
