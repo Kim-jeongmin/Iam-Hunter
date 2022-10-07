@@ -404,7 +404,7 @@ while True: # game loop
     for event in pygame.event.get(): # event loop
         if event.type == QUIT:
             pygame.quit()
-            sys.exit()
+            #sys.exit()
         if event.type == KEYDOWN:
             if game_over == False:
 
