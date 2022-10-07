@@ -30,9 +30,6 @@ GREEN = (0, 255, 0)
 grass_img = pygame.image.load('data/images/grass.png').convert()
 dirt_img = pygame.image.load('data/images/dirt.png').convert()
 plant_img = pygame.image.load('data/images/plant.png').convert()
-spike_img = pygame.image.load('data/images/spike.png').convert()
-jump_pole_img = pygame.image.load('data/images/jump_pole.png').convert()
-bullet_img = pygame.image.load('data/images/bullet.png').convert()
 game_over_img = pygame.image.load('data/images/game_over.png')
 tree_img = pygame.image.load('data/images/tree.png')
 stone_img = pygame.image.load('data/images/stone.png')
@@ -57,8 +54,6 @@ for i in range(0, 3):
 player_conditions['death'][0] = pygame.image.load('data/images/player_condition/death_' + str(0) + '.png')
 
 plant_img.set_colorkey((255,255,255))
-spike_img.set_colorkey((0,0,0))
-jump_pole_img.set_colorkey((0,0,0))
 
 game_map = {}
 
